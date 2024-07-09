@@ -139,7 +139,7 @@ connection_id_tracking_on_nodedown(Config) ->
     process_flag(trap_exit, true),
     ok = stop_node(Config, 0),
     await_exit(C),
-    ok = eventually(?_assertEqual([], util:all_connection_pids(1, Config)), 500, 4).
+    ok = eventually(?_assertEqual([], util:all_connection_pids(Config)), 500, 4).
 
 %%
 %% Helpers

@@ -6,7 +6,6 @@
 -include_lib("eunit/include/eunit.hrl").
 
 -export([all_connection_pids/1,
-         all_connection_pids/2,
          publish_qos1_timeout/4,
          sync_publish_result/3,
          get_global_counters/1,
@@ -30,18 +29,9 @@
         ]).
 
 all_connection_pids(Config) ->
-    all_connection_pids(0, Config).
-
-all_connection_pids(Node, Config) ->
-    case rabbit_ct_broker_helpers:rpc(
-           Config, Node, rabbit_feature_flags, is_enabled, [delete_ra_cluster_mqtt_node]) of
-        true ->
-            Nodes = rabbit_ct_broker_helpers:get_node_configs(Config, nodename),
-            Result = erpc:multicall(Nodes, rabbit_mqtt, local_connection_pids, [], 5000),
-            lists:append([Pids || {ok, Pids} <- Result]);
-        false ->
-            rabbit_ct_broker_helpers:rpc(Config, Node, rabbit_mqtt_collector, list_pids, [])
-    end.
+    Nodes = rabbit_ct_broker_helpers:get_node_configs(Config, nodename),
+    Result = erpc:multicall(Nodes, rabbit_mqtt, local_connection_pids, [], 5000),
+    lists:append([Pids || {ok, Pids} <- Result]).
 
 publish_qos1_timeout(Client, Topic, Payload, Timeout) ->
     Mref = erlang:monitor(process, Client),

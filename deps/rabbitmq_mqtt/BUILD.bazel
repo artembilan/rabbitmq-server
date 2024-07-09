@@ -84,7 +84,6 @@ rabbitmq_app(
         "//deps/amqp10_common:erlang_app",
         "//deps/rabbit:erlang_app",
         "//deps/rabbit_common:erlang_app",
-        "@ra//:erlang_app",
         "@ranch//:erlang_app",
     ],
 )
@@ -195,11 +194,6 @@ rabbitmq_integration_suite(
     ],
     shard_count = 2,
     sharding_method = "group",
-)
-
-rabbitmq_suite(
-    name = "mqtt_machine_SUITE",
-    size = "small",
 )
 
 rabbitmq_suite(

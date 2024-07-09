@@ -209,7 +209,7 @@ end_per_group(_, Config) ->
 init_per_testcase(T, Config)
   when T =:= management_plugin_connection;
        T =:= management_plugin_enable ->
-    ok = inets:start(),
+    inets:start(),
     init_per_testcase0(T, Config);
 init_per_testcase(Testcase, Config) ->
     init_per_testcase0(Testcase, Config).
@@ -1273,11 +1273,6 @@ cli_list_queues(Config) ->
     ok = emqtt:disconnect(C).
 
 maintenance(Config) ->
-    %% When either file rabbit_mqtt_collector changes or different OTP versions
-    %% are used for compilation, the rabbit_mqtt_collector module version will
-    %% change and cause a bad fun error when executing ra:leader_query/2 remotely.
-    ok = rabbit_ct_broker_helpers:enable_feature_flag(Config, delete_ra_cluster_mqtt_node),
-
     C0 = connect(<<"client-0">>, Config, 0, []),
     C1a = connect(<<"client-1a">>, Config, 1, []),
     C1b = connect(<<"client-1b">>, Config, 1, []),
@@ -1367,11 +1362,6 @@ keepalive_turned_off(Config) ->
     ok = emqtt:disconnect(C).
 
 duplicate_client_id(Config) ->
-    %% When either file rabbit_mqtt_collector changes or different OTP versions
-    %% are used for compilation, the rabbit_mqtt_collector module version will
-    %% change and cause a bad fun error when executing ra:leader_query/2 remotely.
-    ok = rabbit_ct_broker_helpers:enable_feature_flag(Config, delete_ra_cluster_mqtt_node),
-
     [Server1, Server2, _] = rabbit_ct_broker_helpers:get_node_configs(Config, nodename),
     %% Test session takeover by both new and old node in mixed version clusters.
     ClientId1 = <<"c1">>,
